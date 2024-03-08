@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    restart: unless-stopped
+    user: '0'
+    ports:
+     - '3000:3000'
+    volumes:
+      - '$PWD/data:/var/lib/grafana'
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    expose:
+      - 9090
+    ports:
+     - '9090:9090'
+    volumes:
+      - '$PWD/prometheus.yml:/etc/prometheus/prometheus.yml'
+    
+  node_exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    expose:
+      - 9100
+    ports:
+     - '9100:9100'   
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+      - '/:/rootfs:ro'
+      - '/var/run:/var/run:ro'
+      - '/sys:/sys:ro'
+      - '/snap/docker/:/snap/docker:ro'
+      - '/dev/disk/:/dev/disk:ro'
+
