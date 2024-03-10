@@ -19,27 +19,25 @@ Creation d'un dossier **data** pour stocker les donnees de la base de donnees
 ```bash
 $ mkdir data
 ```
-### Configuration de Prometheus et Node Exporter
+### Déploiement des Services
 
-- **Prometheus** est configuré via le fichier `prometheus.yml` pour scraper les métriques exposées par `node-exporter` et `cadvisor`. Assurez-vous que ce fichier est correctement configuré et accessible à Prometheus dans le conteneur.
+- Utilisez le fichier `docker-compose.yaml` à la racine de votre projet pour déployer Grafana, Prometheus, cAdvisor, et Node Exporter. Cette configuration simplifie le processus de lancement et assure que tous les services nécessaires sont correctement configurés et interconnectés.
 
-- **Node Exporter** est un outil qui expose les métriques du système et du serveur pour être scrapées par Prometheus. Il est lancé automatiquement via `docker-compose` et accessible sur le port `9100`.
-
-
-Pour simplifier le déploiement de Prometheus et cAdvisor, un fichier `docker-compose.yaml` est utilisé. Assurez-vous d'avoir ce fichier à la racine de votre projet.
-
-- **Démarrage des services avec docker-compose**
+- Lancement des services : Exécutez la commande suivante pour démarrer tous les services définis dans votre fichier `docker-compose.yaml`.
 
   ```bash
   docker-compose up -d
   ```
 
-Ce fichier `docker-compose.yaml` doit inclure la configuration pour Prometheus et cAdvisor, en plus de Grafana si vous souhaitez le gérer via docker-compose également.
+## Accès et Utilisation
+
+- **Grafana** : Accédez à Grafana sur <http://localhost:3000> pour visualiser les tableaux de bord de monitoring.
+- **Prometheus** : Prometheus, accessible sur <http://localhost:9090>, est utilisé pour le scraping des métriques et leur stockage.
+- **cAdvisor** : cAdvisor fournit des métriques sur l'utilisation des ressources par les conteneurs et est accessible sur <http://localhost:8080>.
+- **Node Exporter** : Node Exporter expose les métriques du système et du serveur, facilitant leur scraping par Prometheus.
 
 Vous pouvez vérifier le bon foctionnement de vos Docker avec la commande ```docker ps``` 4 Docker devraient être entrain de tourner.
 
-Allez sur ```http://localhost:3000``` pour acceder aux panneaux de Grafana.
-Lors de votre première connexion les identifiants sont "admin" "admin".
 
 **Configuration des Dashboards**
 Des tableaux de bord peuvent être ajoutés dans Grafana pour visualiser les métriques collectées par Prometheus. Nous avons créé 3 dashboards. Un pour notre machine physique. Un pour docker register, et enfin un dédié aux besoins du projet docker. 
