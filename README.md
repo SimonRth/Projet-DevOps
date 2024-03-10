@@ -1,46 +1,49 @@
 # Projet_Monitoring
 
-## commandes pour lancer le projet:
+Ce projet vise à mettre en place un système de monitoring à l'aide de Grafana, Docker, Prometheus, et Node Exporter. Le déploiement est simplifié grâce à l'utilisation de Docker Compose. En plus de la mise en place du système de surveillance, des tableaux de bord sont configurés dans Grafana pour visualiser les métriques collectées.
 
-- Lancement de l'iamge grafana open-Source
-```$ docker run -d -p 3000:3000 --name=grafana grafana/grafana-oss ```
+** Introduction **
+Dans le domaine de la cybersécurité, la surveillance des systèmes est essentielle pour détecter les anomalies et garantir la disponibilité et la fiabilité des services. Ce projet nous a plu car il propose une solution de monitoring basée sur des outils open source, offrant une visibilité en temps réel sur les performances du système.
 
-- Verification de l'installation de l'image grafana
-```$ docker ps```
-
-
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Etape intermediaire si on veut faire avec un storage
-
--   Creation d"un storage pour grafana
-```bash
-$ docker volume create grafana-storage
-```
-
--   Verifier la creation du storage 
-```bash
-$ docker volume inspect grafana-storage
-```
+** Prérequis **
+- machine Linux Ubuntu
+- Docker ```sudo apt install docker```
+- un IDE (ex: VsCode)
 
 
-- Demarer le docker grafana avec le storage 
-```bash
-$ docker run -d -p 3000:3000 --name=grafana \
-  --volume grafana-storage:/var/lib/grafana \
-  grafana/grafana-enterprise
-```
-
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Demmarer le projet:
+Clonez le repository sur votre machine et entrez dedans.
+Ensuite, créez un dossier "data" pour stoquer les données de Grafana.
 
 Creation d'un dossier **data** pour stocker les donnees de la base de donnees
 ```bash
 $ mkdir data
 ```
-Lancrer grafana avec le dossier **data** pour stocker les donnees de la base de donnees
-```bash
-docker run -d -p 3000:3000 --name=grafana \
-  --user "$(id -u)" \
-  --volume "$PWD/data:/var/lib/grafana" \
-  grafana/grafana-oss
-```
+### Configuration de Prometheus et Node Exporter
 
+- **Prometheus** est configuré via le fichier `prometheus.yml` pour scraper les métriques exposées par `node-exporter` et `cadvisor`. Assurez-vous que ce fichier est correctement configuré et accessible à Prometheus dans le conteneur.
+
+- **Node Exporter** est un outil qui expose les métriques du système et du serveur pour être scrapées par Prometheus. Il est lancé automatiquement via `docker-compose` et accessible sur le port `9100`.
+
+
+Pour simplifier le déploiement de Prometheus et cAdvisor, un fichier `docker-compose.yaml` est utilisé. Assurez-vous d'avoir ce fichier à la racine de votre projet.
+
+- **Démarrage des services avec docker-compose**
+
+  ```bash
+  docker-compose up -d
+  ```
+
+Ce fichier `docker-compose.yaml` doit inclure la configuration pour Prometheus et cAdvisor, en plus de Grafana si vous souhaitez le gérer via docker-compose également.
+
+Vous pouvez vérifier le bon foctionnement de vos Docker avec la commande ```docker ps``` 4 Docker devraient être entrain de tourner.
+
+Allez sur ```http://localhost:3000``` pour acceder aux panneaux de Grafana.
+Lors de votre première connexion les identifiants sont "admin" "admin".
+
+**Configuration des Dashboards**
+Des tableaux de bord peuvent être ajoutés dans Grafana pour visualiser les métriques collectées par Prometheus. Nous avons créé 3 dashboards. Un pour notre machine physique. Un pour docker register, et enfin un dédié aux besoins du projet docker. 
+
+**Conclusion**
+En utilisant Docker, Grafana, Prometheus et Node Exporter, ce projet permet de mettre en place facilement un système de monitoring robuste pour surveiller les performances des systèmes. La configuration flexible et les fonctionnalités de visualisation avancées offertes par Grafana permettent une surveillance efficace et proactive.
 
